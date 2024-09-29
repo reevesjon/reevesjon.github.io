@@ -15,6 +15,23 @@
         .table-responsive {
             margin-top: 20px;
         }
+		/* Initially hide the update form */
+		.update-form {
+			display: none;
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+		/* Show the form when hovering over the progress container */
+		.progress-container:hover .update-form {
+			display: block;
+			opacity: 1;
+		}
+
+		/* Optional: You can also change the cursor or add some styling on hover */
+		.progress-container:hover .progress-bar {
+			cursor: pointer;
+		}
     </style>
 </head>
 <body>
@@ -31,6 +48,8 @@
                         <tr>
                             <th>Task Name</th>
                             <th>Status</th>
+							<th>Priority</th>
+							<th>Percent Complete</th>
                             <th>Due Date</th>
                         </tr>
                     </thead>
@@ -39,6 +58,29 @@
                         <tr>
                             <td>{{ task.task_name }}</td>
                             <td>{{ task.status }}</td>
+							<td>{{ task.priority }}</td>
+							<td>
+								<!-- Progress Bar, if progress bar is too much we can remove it, I just thought it was cool. It'll look better in the flask environment. -->
+								<div class="progress-container">
+									<div class="progress w-100">
+										<div class="progress-bar" role="progressbar" style="width: {{ task.percent_complete }}%;" 
+											 aria-valuenow="{{ task.percent_complete }}" aria-valuemin="0" aria-valuemax="100">
+											{{ task.percent_complete }}%
+										</div>
+									</div>
+									<!-- Update Form (hidden by default, visible on hover) for changing percentage complete as a user -->
+									<div class="update-form">
+										<form action="/update_percent_complete/{{ task.id }}" method="POST">
+											<div class="input-group mt-2">
+												<input type="number" name="percent_complete" class="form-control" min="0" max="100" value="{{ task.percent_complete }}">
+												<div class="input-group-append">
+													<button type="submit" class="btn btn-success">Update</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</td>
                             <td>{{ task.due_date.strftime('%Y-%m-%d') }}</td>
                         </tr>
                         {% endfor %}
