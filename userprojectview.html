@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project##'s Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
+    <style><!--I need to make css files and organize this before it gets out of hand.-->
         body {
             background-color: #f8f9fa;
         }
@@ -32,6 +32,25 @@
 		.progress-container:hover .progress-bar {
 			cursor: pointer;
 		}
+				        /* Priority Colors */
+        .priority-high {
+            background-color: #f44336; /* Red for high priority */
+            color: white;
+        }
+
+        .priority-medium {
+            background-color: #ff9800; /* Orange for medium priority */
+            color: white;
+        }
+
+        .priority-low {
+            background-color: #4caf50; /* Green for low priority */
+            color: white;
+        }
+
+        .priority-cell {
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -54,8 +73,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for task in tasks %}
-                        <tr>
+                        {% for task in tasks %} <!--Remove this below logic if need be, I just looked up how to assign html/css classes via flask based on our priority value-->
+                        <tr class="task-row {% if task.priority == 'high' %}priority-high{% elif task.priority == 'medium' %}priority-medium{% elif task.priority == 'low' %}priority-low{% endif %}">
                             <td>{{ task.task_name }}</td>
                             <td>{{ task.status }}</td>
 							<td>{{ task.priority }}</td>
