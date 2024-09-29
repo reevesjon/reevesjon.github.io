@@ -70,6 +70,7 @@
 							<th>Priority</th>
 							<th>Percent Complete</th>
                             <th>Due Date</th>
+							<th>Comments</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,7 +102,49 @@
 								</div>
 							</td>
                             <td>{{ task.due_date.strftime('%Y-%m-%d') }}</td>
+							        <!-- New Comment Column -->
+							<td>
+								<!-- Display the first 50 characters of the comment -->
+								{% if task.comments %}
+									<p>
+										{{ task.comments[0].content[:50] }}...
+										<a href="#" data-toggle="modal" data-target="#commentModal{{ task.id }}">View All</a>
+									</p>
+								{% else %}
+									<p>No comments yet.</p>
+								{% endif %}
+							</td>
                         </tr>
+						
+						<!-- Modal for Viewing Full Comments -->
+						<div class="modal fade" id="commentModal{{ task.id }}" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel{{ task.id }}" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="commentModalLabel{{ task.id }}">Comments for {{ task.task_name }}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<!-- Display all comments -->
+										{% for comment in task.comments %}
+											<p><strong>{{ comment.author }}:</strong> {{ comment.content }} ({{ comment.date_posted.strftime('%Y-%m-%d') }})</p>
+										{% endfor %}
+									</div>
+									<div class="modal-footer">
+										<!-- Form to Add a New Comment -->
+										<form action="/add_comment/{{ task.id }}" method="POST">
+											<div class="form-group">
+												<label for="new-comment">Add a Comment:</label>
+												<textarea name="comment" class="form-control" rows="2" required></textarea>
+											</div>
+											<button type="submit" class="btn btn-primary">Add Comment</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -113,5 +156,8 @@
             <a href="/" class="btn btn-primary btn-lg">Back to Home</a>
         </div>
     </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
