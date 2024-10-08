@@ -170,18 +170,6 @@ def manager2_dashboard():
     )
 
 
-
-@app.route('/user_dashboard/<int:user_id>')
-def user_dashboard(user_id):
-    user = User.query.get(user_id)
-    tasks = Task.query.filter_by(assigned_to=user_id).all()
-    
-    if user is None:
-        flash('User not found!')
-        return redirect(url_for('login'))
-
-    return render_template('user_dashboard.html', user=user, tasks=tasks)
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -190,25 +178,28 @@ def login():
 
         user = User.query.filter_by(username=username).first()
         if user:
-            if user.password == password:  # Direct comparison, consider replacing with hashed passwords
+            if user.password == password:  # Replace with hashed password comparison for security
                 session['user_id'] = user.user_id
                 session['role'] = user.role_id
                 
                 if 'sysadmin' in username.lower():
                     return redirect(url_for('sysadmin_dashboard'))
                 elif 'manager1' in username.lower():
-                    return redirect(url_for('manager1_dashboard'))
+                    return redirect(url_for('manager_landing'))
                 elif 'manager2' in username.lower():
-                    return redirect(url_for('manager2_dashboard'))
+                    return redirect(url_for('manager2_portal', user_id=user.user_id))
                 else:
-                    return redirect(url_for('user_dashboard', user_id=user.user_id))
+                    # Redirect to user landing page
+                    return redirect(url_for('userlanding', user_id=user.user_id))
 
             else:
                 flash('Invalid username or password')
         else:
             flash('Invalid username or password')
-    
+
     return render_template('login.html')
+
+
 
 @app.route('/dashboard')
 def dashboard():
@@ -393,10 +384,82 @@ def project_view_manager1():
 def user_landing():
     return render_template('userlanding.html')  # Render the user landing HTML page
 
-@app.route('/userprojectview')  # Define the route for the user project view page
-def user_project_view():
-    return render_template('userprojectview.html')  # Render the user project view HTML page
+@app.route('/user_project_view/<int:user_id>')
+def user_project_view(user_id):
+    user = User.query.get(user_id)
+    tasks = Task.query.filter_by(assigned_to=user_id).all()
 
+    if not user:
+        flash('User not found!')
+        return redirect(url_for('login'))
+
+    return render_template('user_project_view.html', user=user, tasks=tasks)
+
+#my shit   
+###
+
+
+#########################################################################
+
+
+###
+#other shit
+@app.route('/logout')
+def logout():
+    # Clear the session to log out the user
+    session.clear()
+    return redirect(url_for('login'))  # Redirect the user to the login page
+
+@app.route('/manager2_projectlist')
+def manager2_project_view():
+    return render_template('manager2_projectlist.html') 
+ 
+@app.route('/manager2_portal/<int:user_id>')
+def manager2_portal(user_id):
+    user = User.query.get(user_id)
+    tasks = Task.query.filter_by(assigned_to=user_id).all()
+    
+    if user is None:
+        flash('User not found!')
+        return redirect(url_for('login'))
+ 
+    return render_template('manager2_portal.html', user=user, tasks=tasks)
+
+@app.route('/manager2_dashboard') #Swapped this to the data analytics page -Jon
+def manager2_data():
+    tasks = Task.query.all()
+    average_completion_time = 5  # Placeholder logic
+    task_completion_rate = 80  # Placeholder logic
+    active_projects = Project.query.count()
+    upcoming_tasks = Task.query.filter(Task.due_date >= date.today()).all()
+    bottom_employees = [{'name': 'John Doe', 'performance_score': 60}, {'name': 'Jane Smith', 'performance_score': 65}, {'name': 'Alice Johnson', 'performance_score': 70}]
+    top_performers = [{'name': 'Michael Brown', 'performance_score': 95}, {'name': 'David Clark', 'performance_score': 90}, {'name': 'Sara White', 'performance_score': 85}]
+ 
+    manager2_data.html
+ 
+@app.route('/userlanding/<int:user_id>')
+def userlanding(user_id):
+    user = User.query.get(user_id)
+    tasks = Task.query.filter_by(assigned_to=user_id).all()
+
+    if user is None:
+        flash('User not found!')
+        return redirect(url_for('login'))
+
+    return render_template('userlanding.html', user=user, tasks=tasks)
+
+@app.route('/user_dashboard/<int:user_id>')
+def user_dashboard(user_id):
+    user = User.query.get(user_id)
+    tasks = Task.query.filter_by(assigned_to=user_id).all()
+
+    if not user:
+        flash('User not found!')
+        return redirect(url_for('login'))
+
+    return render_template('user_dashboard.html', user=user, tasks=tasks)
+
+ 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()  # Create tables if they don't exist

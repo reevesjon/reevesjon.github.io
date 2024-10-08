@@ -1,146 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content ="width=device-width, initial-scale=1.0">
-	<title>User Landing Page</title>
-	<link rel="stylesheet" href="styles.css">
-<style>
-body {
-            background-color: #f8f9fa;
-            font-family: 'Arial', sans-serif;
-        }
-        .landing-container {
-            padding: 30px;
-        }
-        h1 {
-            color: white;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h2 {
-            color: #555;
-            margin-bottom: 20px;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-        }
-        header h1 {
-            margin: 0;
-        }
-        button {
-            background-color: #dc3545;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #c82333;
-        }
-        .main-buttons {
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Landing Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
             display: flex;
             justify-content: center;
-            margin: 40px 0;
+            align-items: center;
+            height: 100vh;
+            background: url("{{ url_for('static', filename='LoginBackground.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            color: #444444;
+            font-family: 'Roboto', sans-serif;
         }
-        .btn-custom {
-            background-color: #007bff;
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25); /* Semi-transparent black overlay */
+            z-index: 1;
+        }
+
+        .dashboard-container {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.2); /* Slightly transparent white background */
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            width: 100%;
+            animation: fadeIn 2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            color: white;
+            height: 100%; /* Ensures cards have equal height */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            font-weight: 500;
+            font-size: 18px;
+        }
+
+        .card-body {
+            flex-grow: 1;
+        }
+
+        .btn-primary {
+            background-color: #F80000;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0px 4px 15px rgba(248, 0, 0, 0.4);
+        }
+
+        .logout-btn {
+            background-color: #F80000;
             color: #fff;
             border: none;
-            border-radius: 5px;
-            padding: 15px 30px;
-            font-size: 1.5rem;
-            transition: background-color 0.3s;
-            margin: 0 20px;
-            text-decoration: none;
-        }
-        .btn-custom:hover {
-            background-color: #0056b3;
-        }
-        #projectPlaceholder, #dataAnalytics {
-            text-align: center;
-            padding: 20px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .hidden {
-            display: none;
-        }
-        ul#projectList {
-            list-style: none;
-            padding: 0;
-        }
-        ul#projectList li {
-            padding: 15px;
-            background-color: white;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-        }
-        ul#projectList li:hover {
-            background-color: #e9ecef;
+            padding: 10px 20px;
+            border-radius: 10px;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            transition: all 0.3s ease;
         }
 
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
 
-</style>
+        /* Smooth transition for cards */
+        .card:hover {
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(255, 255, 255, 0.3);
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch; /* Ensures cards align in height */
+        }
+
+        .col-md-6 {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
 </head>
-<header>
-
-</header>
 <body>
-	<div class="landing-container">
-		<header>
-			<h1>Welcome! <!--Pull username here --> </h1>
-			<button onclick="">Logout</button><!--Need logout function-->
-		</header>
-		<main>
-			<div class="main-buttons">
-                <a href="/projects" class="btn btn-custom">Projects</a>
-                <a href="/dashboard" class="btn btn-custom">Dashboard</a>
+    <div class="overlay"></div>
+    <div class="dashboard-container">
+        <h1>Level 1 Manager Dashboard</h1>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Projects
+                    </div>
+                    <div class="card-body">
+                        <p>Manage projects, create projects, and assign managers.</p>
+                        <a href="/manager2_projectlist" class="btn btn-primary">Open Projects</a>
+                    </div>
+                </div>
             </div>
-			<section>
-				<h2>Your Projects</h2>
-				<div id="projectPlaceholder">Loading Projects...</div>
-				<ul id="projectList" class="hidden">
-					<!-- Need to pull projects for relevant user-->
-					<!--I want the projects to be listed out, essentially little banners for each project that would take them
-					to a new webpage that populates with tasks for the relevant project, they'll just be links to new webpages for now.-->
-					
-					<!--If we want it all to be loaded on the same Page. I'm just going to make a seperate webpage for now.
-			    <section id="taskOverview" class="hidden">
-					<button onclick="goBack()">Back to Projects</button>
-					<h2>Project: <span id="projectName"></span></h2>
-					<h3>Tasks</h3>
-					<ul id="taskList">
-					</ul>
-                </section>
-					-->
-				</ul>
-			</section>
-			<section>
-				<h2>Data Analytics</h2>
-				<div id="dataAnalytics" class="hidden">Loading reports...</div>
-			</section>
-		</main>
-	</div>	
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Data Analytics
+                    </div>
+                    <div class="card-body">
+                        <p>View data analytics for each project.</p>
+                        <a href="/manager1_dashboard" class="btn btn-primary">Open Data Analytics</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>  
 
-	<script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
         function logout() {
-            // Add logout functionality here
             console.log("User logged out");
         }
-        
-        // Example to show/hide project list (mock function)
+
         window.onload = function() {
-            // For now, we'll simulate loading projects
             const projectList = document.getElementById('projectList');
             const projectPlaceholder = document.getElementById('projectPlaceholder');
 
@@ -148,9 +182,8 @@ body {
                 projectPlaceholder.classList.add('hidden');
                 projectList.classList.remove('hidden');
                 projectList.innerHTML = '<li>Project 1</li><li>Project 2</li><li>Project 3</li>';
-            }, 2000); // Simulate a loading delay
+            }, 2000);
         };
     </script>
-
 </body>
 </html>

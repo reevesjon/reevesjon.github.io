@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sysadmin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url("{{ url_for('static', filename='Background2.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+        }
+        .dashboard-container {
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #343a40;
+            margin-bottom: 2rem;
+        }
+        .card {
+            height: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        .card-header {
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .card-body p {
+            color: #212529;
+        }
+        .btn-primary {
+            background-color: #F80000; /* Oracle Red */
+            border-color: #F80000;
+        }
+        .btn-primary:hover {
+            background-color: #cc0000;
+            border-color: #cc0000;
+        }
+        .logout-btn {
+			background-color: #F80000;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			position: absolute;
+			right: 20px;
+			top: 20px;
+            transition: all 0.3s ease;
+		}
+        .logout-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container dashboard-container mt-5">
+        <h1>Sysadmin Dashboard</h1>
+        
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Projects
+                    </div>
+                    <div class="card-body">
+                        <p>Manage projects, create projects, and assign managers.</p>
+                        <a href="/manager2_projectlist" class="btn btn-primary">Open Projects</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        Data Analytics
+                    </div>
+                    <div class="card-body">
+                        <p>View data analytics for each project.</p>
+                        <a href="/manager2_dashboard" class="btn btn-primary">Open Data Analytics</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
